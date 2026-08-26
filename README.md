@@ -5,14 +5,20 @@
 ## What this project demonstrates
 
 - Next.js App Router and server-side data fetching
-- WordPress REST integration for pages, posts, media, taxonomy and hierarchy-aware content
+- WordPress REST integration for content, media, taxonomy, and hierarchy-aware pages
 - WooCommerce REST integration with server-side credentials
 - READY / SOLD operational state modeling
 - exact SKU lookup and server-side filtering
 - cache revalidation after mutations
 - pagination-aware READY/SOLD split fetching
-- SEO-conscious migration of an existing URL hierarchy
-- separation between public rendering and backend credentials
+- SEO-conscious legacy URL migration
+- a clear server-side security boundary between the public app and backend credentials
+
+## Portfolio position
+
+This is **not a production repository**. It is a curated engineering portfolio derived from a real migration project.
+
+The public version focuses on architecture, engineering patterns, trade-offs, and reusable implementation ideas. Production hosts, secrets, internal runbooks, session transcripts, private business notes, and deployment incidents are intentionally excluded.
 
 ## Architecture
 
@@ -21,60 +27,48 @@ Browser
    │
    ▼
 Next.js App Router
-   ├── public UI / SSR
+   ├── UI / SSR
    ├── route handlers
-   ├── SEO + metadata
+   ├── metadata / SEO
    ├── hierarchy-aware routing
    └── server-side integrations
           │
-          ├──────────────► WordPress REST API
+          ├──────────────► WordPress REST
           │
-          └──────────────► WooCommerce REST API
-
-Environment variables hold backend endpoints and credentials.
-No credentials are committed to this repository.
+          └──────────────► WooCommerce REST
 ```
 
-## Portfolio scope
+## Core design decisions
 
-This repository is intentionally **sanitized**. It is not a production deployment and does not contain the original repository's private migration journal, internal SOPs, infrastructure notes, credentials, or operational incident history.
+### Keep WordPress/WooCommerce as source of truth
 
-Backend URLs are configured through environment variables rather than hard-coded production infrastructure identifiers.
+Next.js owns the public application experience while the existing content and commerce systems remain authoritative.
 
-## Key engineering decisions
+### Keep commerce credentials server-side
 
-### Preserve the content system as source of truth
+Backend credentials are read from environment variables and never exposed to browser code.
 
-The migration keeps WordPress/WooCommerce as the authoritative content and commerce layer while Next.js becomes the public application layer.
+### Model hierarchy as data
 
-### Keep credentials server-side
-
-WooCommerce credentials are read from environment variables and used only by server-side integration helpers.
-
-### Treat hierarchy as a first-class concern
-
-Legacy parent/child relationships are modeled as application data rather than flattened into a set of unrelated pages. This supports route resolution, canonical URLs and sitemap generation from the same conceptual hierarchy.
+Parent/child page relationships are treated as first-class application data so routing, canonical metadata, and sitemap generation can share the same model instead of relying on unrelated hard-coded routes.
 
 ### Make availability operational
 
-READY / SOLD is represented as a business state and synchronized with WooCommerce stock state rather than maintained as an unrelated frontend-only flag.
+READY / SOLD is modeled as an operational state connected to WooCommerce stock behavior instead of as a visual-only frontend label.
 
 ## Sanitization policy
 
 Excluded from this portfolio repository:
 
-- secrets, tokens and credentials
-- private deployment configuration
-- internal server paths and infrastructure identifiers
-- internal session transcripts and forensic progress logs
+- secrets, tokens, API keys, passwords, or credentials
+- production hostnames and private infrastructure identifiers
+- private server filesystem paths
+- internal deployment configuration
+- session transcripts and forensic progress logs
 - AI workflow prompts / internal SOPs
-- private business operational notes
+- private customer or business operational data
 - production incident history
 
 ## Disclaimer
 
-This repository is a portfolio representation of engineering patterns from the BBKitchen migration. It is not intended to expose the original production environment or its private operational configuration.
-
-## License
-
-Portfolio source. See the repository owner for usage permissions.
+This repository demonstrates engineering patterns from the BBKitchen migration. It should not be interpreted as a mirror of the original production environment.
