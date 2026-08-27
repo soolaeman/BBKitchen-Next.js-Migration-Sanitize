@@ -105,27 +105,30 @@ telegram_parser_to_gsheet.py
 
 Photo upload: upload_to_drive.py
 
-## 04 — GITHUB ACTIONS
+## 04 — GitHub Actions
 
-Workflow: .github/workflows/run-bbk.yml
+| Setting | Value |
+|---|---|
+| Workflow | `.github/workflows/run-bbk.yml` |
+| Schedule | `0 */3 * * *` |
+| Frequency | **Every 3 hours** |
+| Manual execution | `workflow_dispatch` |
+| Parameters | `--date` · `--start` · `--end` |
+| Runner | `ubuntu-latest` |
+| Python | `3.11` |
+| Dependencies | `requirements.txt` |
 
-Schedule: 0 */3 * * *
-Meaning: EVERY 3 HOURS
-Manual: workflow_dispatch
-Parameters: --date --start --end
-Runner: ubuntu-latest
-Python: 3.11
-Dependencies: requirements.txt
+## 05 — GitHub Secrets / Credentials
 
-## 05 — GITHUB SECRETS / CREDENTIALS
+| System | Credential |
+|---|---|
+| Google Sheets | `GSHEETS_CRED_JSON` |
+| Telegram | `TELETHON_SESSION_BASE64` |
+| Google Drive | `GDRIVE_FOLDER_ID` · `GDRIVE_CLIENT_ID` · `GDRIVE_CLIENT_SECRET` · `GDRIVE_REFRESH_TOKEN` |
+| WooCommerce / WordPress | `WOO_CK` · `WOO_CS` |
+| OpenAI | `OPENAI_API_KEY` |
 
-Google Sheets: GSHEETS_CRED_JSON
-Telegram: TELETHON_SESSION_BASE64
-Google Drive: GDRIVE_FOLDER_ID, GDRIVE_CLIENT_ID, GDRIVE_CLIENT_SECRET, GDRIVE_REFRESH_TOKEN
-WooCommerce / WordPress: WOO_CK, WOO_CS
-OpenAI: OPENAI_API_KEY
-
-Credentials are stored through environment variables, Script Properties, and GitHub Secrets rather than hard-coded business credentials.
+> Credentials are stored through environment variables, Script Properties, and GitHub Secrets — never hard-coded into business logic.
 
 ## 06 — PYTHON — run_cloud.py
 
@@ -141,47 +144,76 @@ run_cloud.py
 Timezone: Asia/Jakarta
 Manual execution can override the date range.
 
-## 07 — PYTHON — telethon_fetch.py
+## 07 — Python — `telethon_fetch.py`
 
-Role: TELEGRAM INGESTION
-Source: Telegram supplier groups
+| Attribute | Current value |
+|---|---|
+| Role | Telegram ingestion |
+| Source | Telegram supplier groups |
+| Source codes | `GK` · `BB` · `SM` · `BL` · `ML` · `PY` · `PE` · `WT` · `ON` · `RB` |
 
-Current source codes:
-GK / BB / SM / BL / ML / PY / PE / WT / ON / RB
+### Verification boundary
 
-Discrepancy:
-Business context: 8 Supplier Groups
-Python source: 10 Telegram source codes
+| Context | Count |
+|---|---:|
+| Business context | **8 supplier groups** |
+| Python source | **10 Telegram source codes** |
 
-Do not automatically assume 10 = 10 suppliers or 8 = 8 Telegram groups. Relationship requires verification.
+> **Do not infer:** `10 = 10 suppliers` or `8 = 8 Telegram groups`. The relationship requires verification.
 
-## 08 — TELEGRAM DATA INGESTION
+## 08 — Telegram Data Ingestion
 
-Captured:
-Message ID / Grouped ID / Date / Timestamp / Caption / Photo Source / Group / Message Link
+### Captured
 
-Output: exports/{SOURCE}/result.json
+- Message ID
+- Grouped ID
+- Date / timestamp
+- Caption / text
+- Photo source
+- Source group
+- Message link
 
-Sources:
-GK / BB / SM / BL / ML / PY / PE / WT / ON / RB
+### Output
 
-## 09 — TELEGRAM ALBUM / MESSAGE GROUPING
+`exports/{SOURCE}/result.json`
 
-Messages within approximately 15 seconds are treated as one product/photo group.
-Caption selection: longest caption → primary caption.
-Caption under 30 characters → skip.
+### Current source codes
 
-## 10 — DEDUPLICATION
+`GK` · `BB` · `SM` · `BL` · `ML` · `PY` · `PE` · `WT` · `ON` · `RB`
 
-Reference: RAW_INVENTORY
-Primary reference: LINK_MESSAGE
+## 09 — Telegram Album / Message Grouping
 
-Telegram message → LINK_MESSAGE → already exists? → YES: skip / NO: process
+| Rule | Behavior |
+|---|---|
+| Time proximity | Messages within ~**15 seconds** → one product/photo group |
+| Caption selection | **Longest caption** → primary caption |
+| Minimum caption | Under **30 characters** → skip |
 
-## 11 — UNIT / SKU GENERATION
+## 10 — Deduplication
 
-Pattern: BBK0001, BBK0002, BBK0003, ...
-Generation: highest existing BBK number + 1.
+| Item | Rule |
+|---|---|
+| Reference dataset | `RAW_INVENTORY` |
+| Primary key/reference | `LINK_MESSAGE` |
+
+```text
+Telegram message
+      ↓
+LINK_MESSAGE
+      ↓
+Already exists?
+ ├── YES → skip
+ └── NO  → process
+```
+
+## 11 — Unit / SKU Generation
+
+| Item | Rule |
+|---|---|
+| Pattern | `BBK0001` · `BBK0002` · `BBK0003` · ... |
+| Generation | **Highest existing BBK number + 1** |
+
+> The upstream Python ingestion layer participates in unit identity creation.
 
 ## 12 — PHOTO PROCESSING
 
@@ -203,101 +235,153 @@ BBK####_3.webp
 
 Output folder: BBK_WEBP_MASTER
 
-## 13 — RAW_INVENTORY
+## 13 — `RAW_INVENTORY`
 
-Role: STAGING / INGESTION DATASET
+**Role:** Staging / ingestion dataset
 
-Confirmed fields:
-A  KODE_UNIT
-B  SOURCE_GROUP
-C  LINK_MESSAGE
-D  CAPTION_RAW
-E  PHOTO_URLS
-F  FETCH_DATE
-G  LAST_SEEN_DATE
-H  LOKASI_GUDANG
-I  STATUS_UNIT
-J  STATUS SCRIPT #1
-K  HARGA
-L  PRICE_ANALYSIS_STATUS
+| Column | Field |
+|:---:|---|
+| A | `KODE_UNIT` |
+| B | `SOURCE_GROUP` |
+| C | `LINK_MESSAGE` |
+| D | `CAPTION_RAW` |
+| E | `PHOTO_URLS` |
+| F | `FETCH_DATE` |
+| G | `LAST_SEEN_DATE` |
+| H | `LOKASI_GUDANG` |
+| I | `STATUS_UNIT` |
+| J | `STATUS SCRIPT #1` |
+| K | `HARGA` |
+| L | `PRICE_ANALYSIS_STATUS` |
 
-## 14 — WAREHOUSE / LOCATION MAPPING
+## 14 — Warehouse / Location Mapping
 
-GK → PAMULANG 2, TANGSEL
-BB → PAMULANG 2, TANGSEL
-SM → PAMULANG 2, TANGSEL
-BL → PAMULANG 2, TANGSEL
-ML → PAMULANG BARAT, TANGSEL
-RB → PAMULANG BARAT, TANGSEL
-PY → SETU, TANGSEL
-PE → SAWANGAN, DEPOK
-WT → KEDAUNG, TANGSEL
-ON → KEDAUNG, TANGSEL
+| Source | Location |
+|---|---|
+| `GK` | PAMULANG 2, TANGSEL |
+| `BB` | PAMULANG 2, TANGSEL |
+| `SM` | PAMULANG 2, TANGSEL |
+| `BL` | PAMULANG 2, TANGSEL |
+| `ML` | PAMULANG BARAT, TANGSEL |
+| `RB` | PAMULANG BARAT, TANGSEL |
+| `PY` | SETU, TANGSEL |
+| `PE` | SAWANGAN, DEPOK |
+| `WT` | KEDAUNG, TANGSEL |
+| `ON` | KEDAUNG, TANGSEL |
 
-Source-code-derived mapping. Not yet the final supplier master structure.
+> Source-code-derived mapping. **Not yet the final supplier master structure.**
 
-## 15 — GOOGLE SHEETS WRITE PROCESS
+## 15 — Google Sheets Write Process
 
-Batch: 10 rows
-Retry: maximum 3 retries
-Purpose: Google API quota protection and network failure protection.
+| Setting | Value |
+|---|---|
+| Batch size | **10 rows** |
+| Retry limit | **3 retries** |
+| Purpose | Google API quota protection + network failure protection |
 
-## 16 — GOOGLE DRIVE
+## 16 — Google Drive
 
-Script: upload_to_drive.py
-Source: BBK_WEBP_MASTER
-Destination: Google Drive
-Deduplication: filename already exists → skip upload.
+| Item | Value |
+|---|---|
+| Script | `upload_to_drive.py` |
+| Source | `BBK_WEBP_MASTER` |
+| Destination | Google Drive |
+| Deduplication | Existing filename → **skip upload** |
 
-## 17 — APPS SCRIPT LAYER
+## 17 — Apps Script Layer
 
-src/apps-script/
-1. normalizeAndBuildMaster.gs
-2. handleStockStatusChange.gs
-3. publishMasterToWooCommerce.gs
-4. syncDrivePhotosToMaster.gs
-5. extractPriceAndStatus.gs
+**Location:** `src/apps-script/`
 
-## 18 — APPS SCRIPT #5 — PRICE + STATUS EXTRACTION
+| # | Script | Role |
+|---:|---|---|
+| 1 | `normalizeAndBuildMaster.gs` | Normalize / build master |
+| 2 | `handleStockStatusChange.gs` | Stock lifecycle |
+| 3 | `publishMasterToWooCommerce.gs` | WooCommerce publishing |
+| 4 | `syncDrivePhotosToMaster.gs` | Photo synchronization |
+| 5 | `extractPriceAndStatus.gs` | Price + status extraction |
 
-File: extractPriceAndStatus.gs
-Source: RAW_INVENTORY
-AI: OpenAI gpt-4o-mini, temperature 0, JSON response
+## 18 — Apps Script #5 — Price + Status Extraction
 
-Caption → extract price → extract status
+| Item | Value |
+|---|---|
+| File | `extractPriceAndStatus.gs` |
+| Source | `RAW_INVENTORY` |
+| Model | `gpt-4o-mini` |
+| Temperature | `0` |
+| Response | JSON |
+| Processing limit | **25 AI records / execution** |
 
-Allowed status: AVAILABLE / SOLD / AMBIGUOUS
-Output: I = STATUS, K = HARGA, L = processing/result state
-Processing limit: 25 AI records / execution
+```text
+Caption
+  ↓
+Extract price
+  ↓
+Extract status
+```
 
-## 19 — PRICE EXTRACTION RULE
+**Allowed status:** `AVAILABLE` · `SOLD` · `AMBIGUOUS`
 
-Do not automatically treat dimensions, capacity, wattage, quantity, model number, serial number, telephone number, address, date, year, or other unrelated numbers as price.
+**Output:** `I = STATUS` · `K = HARGA` · `L = processing/result state`
 
-Supported formats include:
-250.000 / 1.200.000 / 2,5 juta / 750rb / 1,5 jt
+## 19 — Price Extraction Rule
 
-## 20 — PRICING BOUNDARY
+### Numbers that are **not automatically prices**
 
-Confirmed ingestion field: HARGA
+- Dimensions
+- Capacity
+- Wattage
+- Quantity
+- Model number
+- Serial number
+- Telephone number
+- Address
+- Date / year
+- Other unrelated numbers
 
-Commercial pricing model:
-SUPPLIER PRICE → MIDDLE PRICE → WA PRICE → FLOOR PRICE → DEAL PRICE
+### Supported human-style formats
 
-EXTRACTED SOURCE PRICE ≠ ALL INTERNAL COMMERCIAL PRICES
+`250.000` · `1.200.000` · `2,5 juta` · `750rb` · `1,5 jt`
 
-## 21 — INTERNAL PRICING
+## 20 — Pricing Boundary
 
-Internal/admin-only:
-Supplier Price / Middle Price / WA Price / Floor Price / Deal Price
+**Confirmed ingestion field:** `HARGA`
 
-Public website:
-Product information / Photo / Description / Specification / Safe availability information / CTA WhatsApp
+```text
+SUPPLIER PRICE
+      ↓
+MIDDLE PRICE
+      ↓
+WA PRICE
+      ↓
+FLOOR PRICE
+      ↓
+DEAL PRICE
+```
 
-Must not expose:
-Supplier Price / Middle Price / WA Price / Floor Price / Deal Price / Margin / Internal commercial notes
+> **Extracted source price ≠ all internal commercial prices.**
 
-This is a data/access boundary, not merely frontend hiding.
+## 21 — Internal Pricing
+
+### Internal / admin-only
+
+- Supplier Price
+- Middle Price
+- WA Price
+- Floor Price
+- Deal Price
+- Margin
+- Internal commercial notes
+
+### Public website
+
+- Product information
+- Photo
+- Description
+- Specification
+- Safe availability information
+- CTA WhatsApp
+
+> **Boundary:** internal commercial data must be protected at the data/access layer — not merely hidden in the frontend.
 
 ## 22 — APPS SCRIPT #1 — NORMALIZATION / MASTER BUILD
 
@@ -310,37 +394,38 @@ Normalization / transformation
 MASTER_INVENTORY
 ```
 
-## 23 — MASTER_INVENTORY
+## 23 — `MASTER_INVENTORY`
 
-Confirmed worksheet: MASTER_INVENTORY
+**Confirmed worksheet:** `MASTER_INVENTORY`
 
-Known columns:
-A  KODE_UNIT / SKU
-B  PRODUCT TITLE
-C  SEO TITLE
-D  CATEGORY SLUG
-E  STATUS_UNIT
-F  PIPELINE / PUBLISH STATUS
-G  LOKASI_UNIT
-H  KONDISI_UNIT
-I  EXCERPT
-J  CONTENT
-K  YOAST KEYWORD
-L  YOAST DESCRIPTION
-M  MAIN IMAGE
-N  PHOTO URLS / GALLERY
-O  TANGGAL_MASUK
-P  TANGGAL_TERJUAL
-Q  DURASI_TERJUAL
-R  LINK_TELEGRAM
-S  PRODUCT ID
-T  NOT YET CONFIRMED
-U  IMAGE ALT
-V  IMAGE TITLE
-W  IMAGE CAPTION
-X  IMAGE DESCRIPTION
+| Column | Field |
+|:---:|---|
+| A | `KODE_UNIT / SKU` |
+| B | `PRODUCT TITLE` |
+| C | `SEO TITLE` |
+| D | `CATEGORY SLUG` |
+| E | `STATUS_UNIT` |
+| F | `PIPELINE / PUBLISH STATUS` |
+| G | `LOKASI_UNIT` |
+| H | `KONDISI_UNIT` |
+| I | `EXCERPT` |
+| J | `CONTENT` |
+| K | `YOAST KEYWORD` |
+| L | `YOAST DESCRIPTION` |
+| M | `MAIN IMAGE` |
+| N | `PHOTO URLS / GALLERY` |
+| O | `TANGGAL_MASUK` |
+| P | `TANGGAL_TERJUAL` |
+| Q | `DURASI_TERJUAL` |
+| R | `LINK_TELEGRAM` |
+| S | `PRODUCT ID` |
+| T | **NOT YET CONFIRMED** |
+| U | `IMAGE ALT` |
+| V | `IMAGE TITLE` |
+| W | `IMAGE CAPTION` |
+| X | `IMAGE DESCRIPTION` |
 
-T remains undefined until a source confirms its meaning.
+> Column `T` remains undefined until a source confirms its meaning.
 
 ## 24 — MASTER_INVENTORY ROLE
 
@@ -377,67 +462,77 @@ Publish condition: F = READY_TO_PUBLISH
 Image requirement: MAIN_IMAGE required
 No image: SKIP: NO IMAGE
 
-## 27 — MASTER → WOOCOMMERCE MAPPING
+## 27 — MASTER → WooCommerce Mapping
 
-A → sku
-B → title
-C → seo_title
-D → category_slug
-E → status_unit
-G → lokasi_unit
-H → kondisi_unit
-I → excerpt
-J → content
-K → yoast_keyword
-L → yoast_description
-M → main_image
-N → photo_urls
-R → link_telegram
-U → image_alt
-V → image_title
-W → image_caption
-X → image_description
+| MASTER | WooCommerce |
+|:---:|---|
+| A | `sku` |
+| B | `title` |
+| C | `seo_title` |
+| D | `category_slug` |
+| E | `status_unit` |
+| G | `lokasi_unit` |
+| H | `kondisi_unit` |
+| I | `excerpt` |
+| J | `content` |
+| K | `yoast_keyword` |
+| L | `yoast_description` |
+| M | `main_image` |
+| N | `photo_urls` |
+| R | `link_telegram` |
+| U | `image_alt` |
+| V | `image_title` |
+| W | `image_caption` |
+| X | `image_description` |
 
-Endpoint: /wp-json/bbk/v1/tambah-produk
+**Endpoint:** `/wp-json/bbk/v1/tambah-produk`
 
-## 28 — WOOCOMMERCE STOCK STATE
+## 28 — WooCommerce Stock State
 
-MASTER STATUS = SOLD → Woo stock_status = outofstock
-MASTER STATUS != SOLD → Woo stock_status = instock
+| MASTER status | WooCommerce |
+|---|---|
+| `SOLD` | `outofstock` |
+| Anything else | `instock` |
 
-Successful publish: HTTP 200 → F = PUBLISHED → S = WooCommerce Product ID
-Error: F = ERROR: ...
+### Publish result
 
-## 29 — APPS SCRIPT #2 — STOCK STATUS
+- **HTTP 200** → `F = PUBLISHED` → `S = WooCommerce Product ID`
+- **Error** → `F = ERROR: ...`
 
-File: handleStockStatusChange.gs
-Target: MASTER_INVENTORY
-Search: SKU OR Product ID
+## 29 — Apps Script #2 — Stock Status
 
-Relevant:
-E = STATUS_UNIT
-O = TANGGAL_MASUK
-P = TANGGAL_TERJUAL
-Q = DURASI_TERJUAL
-S = PRODUCT ID
+| Item | Value |
+|---|---|
+| File | `handleStockStatusChange.gs` |
+| Target | `MASTER_INVENTORY` |
+| Search | SKU **or** Product ID |
 
-## 30 — SOLD LIFECYCLE
+**Relevant fields:** `E = STATUS_UNIT` · `O = TANGGAL_MASUK` · `P = TANGGAL_TERJUAL` · `Q = DURASI_TERJUAL` · `S = PRODUCT ID`
 
-STATUS = SOLD:
-E = SOLD
-P = TANGGAL_TERJUAL
-Q = DURASI_TERJUAL
+## 30 — Sold Lifecycle
 
-If duration is not provided: TANGGAL_TERJUAL - TANGGAL_MASUK
-Result: DAYS TO SELL
+**When:** `STATUS = SOLD`
 
-## 31 — READY LIFECYCLE
+| Field | Result |
+|---|---|
+| E | `SOLD` |
+| P | `TANGGAL_TERJUAL` |
+| Q | `DURASI_TERJUAL` |
 
-STATUS = READY:
-E = READY
-P = empty
-Q = empty
-R = LINK_TELEGRAM retained
+If duration is not provided:
+
+`TANGGAL_TERJUAL - TANGGAL_MASUK` → **Days to Sell**
+
+## 31 — Ready Lifecycle
+
+**When:** `STATUS = READY`
+
+| Field | Result |
+|---|---|
+| E | `READY` |
+| P | empty |
+| Q | empty |
+| R | `LINK_TELEGRAM` retained |
 
 ## 32 — CURRENT PRODUCT STATE MACHINE
 
@@ -461,28 +556,48 @@ READY / SOLD
 
 Error/exception states: AMBIGUOUS / ERROR / NO_PHOTOS_FOUND / SKIP: NO IMAGE
 
-## 33 — INVENTORY INTELLIGENCE
+## 33 — Inventory Intelligence
 
-Analyzable:
-Unit count / Unit status / Warehouse-location / Source group / Condition / Product-category / Entry date / Sold date / Days to sell / Published state / Photo readiness / Pipeline errors
+### Confirmed analyzable dimensions
 
-Potential derived metrics:
-Inventory aging / Average days to sell / Median days to sell / Fast-moving units / Slow-moving units / Category velocity / Warehouse velocity / Supplier-source velocity
+- Unit count
+- Unit status
+- Warehouse / location
+- Source group
+- Condition
+- Product / category
+- Entry date
+- Sold date
+- Days to sell
+- Published state
+- Photo readiness
+- Pipeline errors
 
-## 34 — SUPPLIER / WAREHOUSE INTELLIGENCE
+### Potential derived metrics
+
+- Inventory aging
+- Average / median days to sell
+- Fast-moving units
+- Slow-moving units
+- Category velocity
+- Warehouse velocity
+- Supplier / source velocity
+
+## 34 — Supplier / Warehouse Intelligence
 
 ```text
 SUPPLIER / SOURCE
-  ↓
+      ↓
 INVENTORY
-  ↓
+      ↓
 MOVEMENT
-  ↓
+      ↓
 DAYS TO SELL
 ```
 
-Potential classifications: HOT / WARM / COLD
-Thresholds are not yet defined.
+**Potential classifications:** `HOT` · `WARM` · `COLD`
+
+> Thresholds are **not yet defined**. Do not invent them.
 
 ## 35 — WEBSITE
 
