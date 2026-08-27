@@ -1,8 +1,46 @@
 # BBK — CURRENT SYSTEM CONTEXT SNAPSHOT
 
-## Updated: 27 August 2026
+> **Status:** Current ground truth  
+> **Updated:** 27 August 2026  
+> **Purpose:** Sanitized system reference for BBKitchen engineering, migration, automation, and future Control Tower work.
 
-## 1. REPOSITORIES
+## 1. REPOSITORY MAP
+
+| Repository | Visibility | Role |
+|---|:---:|---|
+| [**BBKitchen-Next.js-Migration-Sanitize**](https://github.com/soolaeman/BBKitchen-Next.js-Migration-Sanitize) | 🟢 PUBLIC | Canonical sanitized portfolio / engineering reference |
+| [**Front-End-BBKitchen**](https://github.com/soolaeman/Front-End-BBKitchen) | 🟢 PUBLIC | Active BBKitchen website / frontend / Next.js migration |
+| [**BBK-AI-Growth-Automation**](https://github.com/soolaeman/BBK-AI-Growth-Automation) | 🟢 PUBLIC | AI Growth documentation + Apps Script processing/integration |
+| `BBK-Automation` | 🔴 PRIVATE | Production-oriented Python automation runtime |
+
+### Canonical routing
+
+- **Portfolio / sanitized architecture:** [BBKitchen-Next.js-Migration-Sanitize](https://github.com/soolaeman/BBKitchen-Next.js-Migration-Sanitize)
+- **Frontend implementation:** [Front-End-BBKitchen](https://github.com/soolaeman/Front-End-BBKitchen)
+- **AI + Apps Script layer:** [BBK-AI-Growth-Automation](https://github.com/soolaeman/BBK-AI-Growth-Automation)
+- **Private runtime:** `BBK-Automation`
+
+> GitHub does not provide a generic HTTP redirect between repositories. Public references therefore use direct repository links; the private runtime is intentionally not exposed as a public portfolio destination.
+
+### Public / private boundary
+
+**PUBLIC**
+- Sanitized architecture
+- Engineering patterns
+- Migration documentation
+- Non-sensitive Apps Script documentation
+- Public frontend implementation
+
+**PRIVATE**
+- Production automation runtime
+- Credentials and tokens
+- Telegram sessions
+- Private infrastructure identifiers
+- Customer / supplier private data
+- Internal commercial data
+- Production-only configuration
+
+## 2. REPOSITORIES
 
 | Repository | Visibility | Role |
 |---|---|---|
@@ -10,66 +48,6 @@
 | soolaeman/Front-End-BBKitchen | PUBLIC | Active BBKitchen website / frontend / Next.js migration |
 | soolaeman/BBK-AI-Growth-Automation | PUBLIC | AI Growth documentation + Apps Script processing/integration layer |
 | soolaeman/BBK-Automation | PRIVATE | Production-oriented Python automation runtime |
-
-## 2. PUBLIC / PRIVATE BOUNDARY
-
-### PUBLIC
-- BBKitchen-Next.js-Migration-Sanitize
-- Front-End-BBKitchen
-- BBK-AI-Growth-Automation
-
-### PRIVATE
-- BBK-Automation
-
-Public repositories must contain only sanitized, non-sensitive material.
-
-Do not publish:
-- secrets, API keys, tokens, credentials
-- Telegram sessions
-- private infrastructure identifiers
-- customer data
-- private business data
-- internal operational credentials
-- production-only configuration
-
-## 3. REPOSITORY ROLES
-
-PUBLIC PORTFOLIO
-BBKitchen-Next.js-Migration-Sanitize
-→ sanitized architecture, engineering patterns, public system context
-
-ACTIVE PUBLIC FRONTEND
-Front-End-BBKitchen
-→ BBKitchen website / Next.js migration
-
-PUBLIC AUTOMATION DOCUMENTATION
-BBK-AI-Growth-Automation
-→ Apps Script + AI Growth layer
-
-PRIVATE AUTOMATION RUNTIME
-BBK-Automation
-→ Python / GitHub Actions / Telegram ingestion
-
-## 4. CANONICAL PUBLIC PORTFOLIO REFERENCE
-
-BBKitchen-Next.js-Migration-Sanitize is the canonical sanitized public reference for the BBKitchen engineering portfolio.
-
-It is not a mirror of production.
-
-It contains:
-- architecture
-- engineering patterns
-- sanitized system context
-- migration decisions
-- reusable implementation concepts
-
-It excludes:
-- production secrets
-- private infrastructure
-- private operational data
-- session transcripts
-- internal credentials
-- production-only incident details
 
 ## 5. OVERALL CURRENT ARCHITECTURE
 
@@ -108,7 +86,7 @@ FUTURE CONTROL TOWER
 
 ## 6. BBK-AUTOMATION
 
-Repository: soolaeman/BBK-Automation
+Repository: `soolaeman/BBK-Automation` — PRIVATE
 
 Primary runtime:
 GitHub Actions → run_cloud.py → telethon_fetch.py → telegram_parser_to_gsheet.py
@@ -462,7 +440,7 @@ Thresholds are not yet defined.
 
 ## 38. WEBSITE
 
-Repository: soolaeman/Front-End-BBKitchen
+Repository: [soolaeman/Front-End-BBKitchen](https://github.com/soolaeman/Front-End-BBKitchen) — PUBLIC
 Role: PUBLIC PRODUCT / SEO / DISCOVERY LAYER
 
 MASTER → WooCommerce → BBKitchen Website
@@ -735,3 +713,16 @@ CONTROL TOWER
 └── REPORT
 ↓
 DECIDE
+
+---
+
+## Canonical References
+
+| Area | Repository |
+|---|---|
+| Sanitized public system context | [BBKitchen-Next.js-Migration-Sanitize](https://github.com/soolaeman/BBKitchen-Next.js-Migration-Sanitize) |
+| Active frontend | [Front-End-BBKitchen](https://github.com/soolaeman/Front-End-BBKitchen) |
+| AI Growth + Apps Script | [BBK-AI-Growth-Automation](https://github.com/soolaeman/BBK-AI-Growth-Automation) |
+| Production automation | `BBK-Automation` — PRIVATE |
+
+**Public portfolio entry point:** [BBKitchen-Next.js-Migration-Sanitize](https://github.com/soolaeman/BBKitchen-Next.js-Migration-Sanitize)
