@@ -72,3 +72,16 @@ Excluded from this portfolio repository:
 ## Disclaimer
 
 This repository demonstrates engineering patterns from the BBKitchen migration. It should not be interpreted as a mirror of the original production environment.
+
+
+## BBK Repository Map
+
+This repository is the **canonical sanitized public portfolio reference** for the BBKitchen engineering work.
+
+- **Public — Active Frontend:** [soolaeman/Front-End-BBKitchen](https://github.com/soolaeman/Front-End-BBKitchen)
+- **Public — AI Growth / Apps Script:** [soolaeman/BBK-AI-Growth-Automation](https://github.com/soolaeman/BBK-AI-Growth-Automation)
+- **Private — Automation Runtime:** `soolaeman/BBK-Automation`
+
+For the full public/private boundary and routing rules, see [docs/REPOSITORY-MAP.md](docs/REPOSITORY-MAP.md).
+
+The private automation runtime is intentionally not linked as a public portfolio repository. No secrets, credentials, Telegram sessions, customer data, or private operational configuration belong in this repository.
