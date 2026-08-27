@@ -599,60 +599,98 @@ DAYS TO SELL
 
 > Thresholds are **not yet defined**. Do not invent them.
 
-## 35 — WEBSITE
+## 35 — Website
 
-Repository: [soolaeman/Front-End-BBKitchen](https://github.com/soolaeman/Front-End-BBKitchen) — PUBLIC
-Role: PUBLIC PRODUCT / SEO / DISCOVERY LAYER
+| Item | Current state |
+|---|---|
+| Repository | [`Front-End-BBKitchen`](https://github.com/soolaeman/Front-End-BBKitchen) — **PUBLIC** |
+| Role | Public product / SEO / discovery layer |
 
 ```text
 MASTER_INVENTORY
-  ↓
+      ↓
 WooCommerce
-  ↓
+      ↓
 BBKitchen Website
 ```
 
-Objective:
-Unique Units → Unique Product Pages → Search Surface → Organic Discovery → Customer Interest → WhatsApp
+### Objective
 
-## 36 — PUBLIC VS INTERNAL DATA
+**Unique Units → Unique Product Pages → Search Surface → Organic Discovery → Customer Interest → WhatsApp**
 
-PUBLIC:
-Product Image / Description / Specification / Condition / Safe availability information / SEO / CTA
+## 36 — Public vs Internal Data
 
-INTERNAL:
-Supplier Source / Supplier Price / Middle Price / WA Price / Floor Price / Deal Price / Margin / Commercial Notes / Internal operational information
+| PUBLIC | INTERNAL |
+|---|---|
+| Product image | Supplier source |
+| Description | Supplier price |
+| Specification | Middle price |
+| Condition | WA price |
+| Safe availability | Floor price |
+| SEO | Deal price |
+| CTA | Margin |
+|  | Commercial notes |
+|  | Internal operational information |
 
-Internal data must not leak through frontend JSON API, HTML, metadata, SEO schema, search index, or public endpoint.
+> **Security boundary:** internal data must not leak through frontend JSON API, HTML, metadata, SEO schema, search index, or public endpoints.
 
-## 37 — TELEGRAM → CUSTOMER WORKFLOW
+## 37 — Telegram → Customer Workflow
 
-Telegram Source → Admin → Cross-check → Save photo → Copy caption → Adjust commercial information → WhatsApp → Customer
+```text
+Telegram Source
+      ↓
+Admin
+      ↓
+Cross-check
+      ↓
+Save photo
+      ↓
+Copy caption
+      ↓
+Adjust commercial information
+      ↓
+WhatsApp
+      ↓
+Customer
+```
 
-Telegram provides photo, caption, source message, availability, and original source.
-MASTER_INVENTORY R = LINK_TELEGRAM is retained.
+### Telegram provides
 
-## 38 — CUSTOMER / SALES
+- Photo
+- Caption
+- Source message
+- Availability
+- Original source
+
+**MASTER_INVENTORY:** `R = LINK_TELEGRAM` is retained.
+
+## 38 — Customer / Sales
 
 ```text
 Website / Social / Ads / Referral
-  ↓
-Customer
-  ↓
-WhatsApp
-  ↓
-Lead
-  ↓
-Negotiation
-  ↓
-Quotation
-  ↓
-Deal
-  ↓
-Revenue
+              ↓
+           Customer
+              ↓
+           WhatsApp
+              ↓
+             Lead
+              ↓
+        Negotiation
+              ↓
+          Quotation
+              ↓
+             Deal
+              ↓
+           Revenue
 ```
 
-Website / GA4 / Meta can observe acquisition/events but does not automatically guarantee WhatsApp conversation → negotiation → final deal → revenue.
+### Attribution boundary
+
+**Observable acquisition/events ≠ confirmed commercial outcome**
+
+Website, GA4, and Meta may observe acquisition or events, but do not automatically guarantee:
+
+`WhatsApp conversation → negotiation → final deal → revenue`
 
 ## 39 — GA4
 
@@ -662,11 +700,22 @@ Website
 GA4
 ```
 
-Relevant: Users / Sessions / Traffic Source / Medium / Campaign / Landing Page / Page Views / Engagement / Events / Conversions
+### Relevant dimensions
 
-GA4 → WhatsApp Click ≠ Deal / Revenue / Margin
+- Users
+- Sessions
+- Traffic source
+- Medium
+- Campaign
+- Landing page
+- Page views
+- Engagement
+- Events
+- Conversions
 
-## 40 — META / META PIXEL / ADS
+> **Attribution boundary:** `GA4 → WhatsApp click` does not automatically equal **deal, revenue, or margin**.
+
+## 40 — Meta / Meta Pixel / Ads
 
 ```text
 Meta
@@ -676,110 +725,215 @@ Ads
 Pixel / Events
 ```
 
-Relevant: Impressions / Reach / Clicks / CTR / Spend / Campaign / Ad Set / Creative / Audience / Events
+### Relevant dimensions
 
-Meta → Website → WhatsApp → Deal is not automatically guaranteed to be linked.
+- Impressions
+- Reach
+- Clicks
+- CTR
+- Spend
+- Campaign
+- Ad set
+- Creative
+- Audience
+- Events
+
+> **Attribution boundary:** `Meta → Website → WhatsApp → Deal` is not automatically guaranteed to be linked.
 
 ## 41 — SEO
 
-MORE UNIQUE UNITS → MORE UNIQUE PRODUCT PAGES → MORE SEARCH SURFACE → MORE ORGANIC DISCOVERY
+```text
+MORE UNIQUE UNITS
+      ↓
+MORE UNIQUE PRODUCT PAGES
+      ↓
+MORE SEARCH SURFACE
+      ↓
+MORE ORGANIC DISCOVERY
+```
 
-Potential analysis: Impressions / Clicks / CTR / Position / Queries / Indexed Pages / Landing Pages / Product Pages / Category Pages / Metadata / Internal Linking / Crawlability / Content Quality
+### Potential analysis
 
-## 42 — FINANCE
+| Area | Signals |
+|---|---|
+| Search performance | Impressions · Clicks · CTR · Position |
+| Queries | Search queries |
+| Indexation | Indexed pages · Crawlability |
+| Pages | Landing · Product · Category |
+| On-page | Metadata · Internal linking · Content quality |
 
-Desired intelligence: Revenue / COGS / Cost / Margin / Ads Cost / Operational Cost / Cash In / Cash Out / Receivable / Payable / Profitability
+## 42 — Finance
 
-Integration depth: NOT YET FULLY VERIFIED
+### Desired intelligence
 
-## 43 — CUSTOMER DATA
+- Revenue
+- COGS
+- Cost
+- Margin
+- Ads cost
+- Operational cost
+- Cash in / cash out
+- Receivable / payable
+- Profitability
 
-Desired structure:
-Customer → ID / Name / Phone / Source / Campaign / Product Interest / Lead / Quotation / Deal / Revenue
+| Status | **NOT YET FULLY VERIFIED** |
+|---|---|
+| Current integration depth | Incomplete / requires additional source verification |
 
-Current status: NOT YET CONFIRMED AS A COMPLETE CONNECTED DATABASE
+> Do not assume a complete financial dataset exists in the current system.
 
-## 44 — REPORTING
+## 43 — Customer Data
+
+### Desired structure
+
+```text
+Customer
+├── ID
+├── Name
+├── Phone
+├── Source
+├── Campaign
+├── Product Interest
+├── Lead
+├── Quotation
+├── Deal
+└── Revenue
+```
+
+| Status | **NOT YET CONFIRMED** |
+|---|---|
+| Connected customer database | Not established as complete |
+
+## 44 — Reporting
 
 ```text
 RAW DATA
-  ↓
+   ↓
 ANALYSIS
-  ↓
+   ↓
 INSIGHT
-  ↓
+   ↓
 DECISION
 ```
 
-Audience: FOUNDER / ADMIN / OPERATIONS / MARKETING / SALES / INVESTOR
+### Audience
 
-## 45 — CONTROL TOWER — FUTURE
+`FOUNDER` · `ADMIN` · `OPERATIONS` · `MARKETING` · `SALES` · `INVESTOR`
 
-Purpose: READ / ANALYZE / ALERT / DECIDE / REPORT
+## 45 — Control Tower — Future
 
-EXISTING OPERATIONAL SYSTEM → MASTER DATA → BBK CONTROL TOWER → READ / ANALYZE / ALERT → DECIDE → REPORT
+**Purpose:** `READ` · `ANALYZE` · `ALERT` · `DECIDE` · `REPORT`
 
-## 46 — FUTURE CONTROL TOWER MODULES
+```text
+EXISTING OPERATIONAL SYSTEM
+            ↓
+        MASTER DATA
+            ↓
+      BBK CONTROL TOWER
+       ├── READ
+       ├── ANALYZE
+       ├── ALERT
+       ├── DECIDE
+       └── REPORT
+```
 
-1. Overview
-2. Website / GA4
-3. Marketing / Meta
-4. Product + Warehouse Intelligence
-5. Customer / Sales
-6. Finance
-7. SEO
-8. Reporting
-9. Access Control
+> The Control Tower is an **analytical / decision layer**, not the primary upstream ingestion engine.
 
-## 47 — WAREHOUSE INTELLIGENCE
+## 46 — Future Control Tower Modules
 
-8 supplier/warehouse network → inventory movement → fast-moving units → hot categories → hot suppliers/locations → future warehouse planning
+| # | Module |
+|---:|---|
+| 1 | Overview |
+| 2 | Website / GA4 |
+| 3 | Marketing / Meta |
+| 4 | Product + Warehouse Intelligence |
+| 5 | Customer / Sales |
+| 6 | Finance |
+| 7 | SEO |
+| 8 | Reporting |
+| 9 | Access Control |
 
-Decision questions:
-Barang apa yang paling cepat bergerak?
-Supplier mana yang paling produktif?
-Kategori apa yang hot?
-Warehouse mana yang menghasilkan movement terbaik?
-Barang apa yang terlalu lama?
+> Scope should remain controlled. Not every business function needs to become a separate dashboard module.
 
-## 48 — PRODUCT AUTOMATION GUARDRAILS
+## 47 — Warehouse Intelligence
 
-Current states:
-PENDING_PHOTOS / READY_TO_PUBLISH / PUBLISHED / ERROR / NO_PHOTOS_FOUND / SKIP: NO IMAGE
+```text
+8 SUPPLIER / WAREHOUSE NETWORK
+          ↓
+   INVENTORY MOVEMENT
+          ↓
+   FAST-MOVING UNITS
+          ↓
+     HOT CATEGORIES
+          ↓
+ HOT SUPPLIERS / LOCATIONS
+          ↓
+ FUTURE WAREHOUSE PLANNING
+```
 
-Monitor:
-Automation Health / Data Quality / Publishing Errors / Missing Photos / Ambiguous Prices-Status / Failed Integrations
+### Decision questions
+
+- Barang apa yang paling cepat bergerak?
+- Supplier mana yang paling produktif?
+- Kategori apa yang hot?
+- Warehouse mana yang menghasilkan movement terbaik?
+- Barang apa yang terlalu lama?
+
+## 48 — Product Automation Guardrails
+
+### Current states
+
+`PENDING_PHOTOS` · `READY_TO_PUBLISH` · `PUBLISHED` · `ERROR` · `NO_PHOTOS_FOUND` · `SKIP: NO IMAGE`
+
+### Monitor
+
+| Area | Examples |
+|---|---|
+| Automation health | Job / execution state |
+| Data quality | Missing or malformed data |
+| Publishing | Publish errors / skipped products |
+| Photos | Missing photos |
+| AI extraction | Ambiguous price / status |
+| Integrations | Failed external calls |
 
 ## 49 — AI
 
-Current verified AI usage:
-Apps Script #5 → OpenAI gpt-4o-mini → Price + Status extraction
+### Current verified usage
 
-Google AI Studio: future / additional AI analysis environment.
-It is not the existing production runtime.
+```text
+Apps Script #5
+      ↓
+OpenAI gpt-4o-mini
+      ↓
+Price + Status extraction
+```
 
-## 50 — FIRECRAWL
+### Google AI Studio
 
-Role: External Web Research
-Potential: Competitor research / SEO research / Market intelligence / Website analysis / External data extraction
+**Role:** Future / additional AI analysis environment
 
-Not established as the primary BBK transactional data layer.
+> Google AI Studio is **not** the existing BBK production runtime.
 
-## 51 — SINGLE SOURCE / DATA LAYER MODEL
+## 50 — Firecrawl
 
-SOURCE OF ORIGIN: Telegram / Supplier
-↓
-INGESTION: BBK-Automation
-↓
-STAGING: RAW_INVENTORY
-↓
-OPERATIONAL MASTER: MASTER_INVENTORY
-↓
-PUBLIC PROJECTION: WooCommerce
-↓
-PUBLIC WEBSITE: BBKitchen
+| Item | Current position |
+|---|---|
+| Role | External web research |
+| Potential use | Competitor research · SEO research · Market intelligence · Website analysis · External data extraction |
+| Transactional role | **Not established** as the primary BBK data layer |
 
-RAW_INVENTORY ≠ MASTER_INVENTORY ≠ WooCommerce ≠ Website
+## 51 — Single Source / Data Layer Model
+
+| Layer | System | Role |
+|---|---|---|
+| Source of origin | Telegram / Supplier | Original source |
+| Ingestion | BBK-Automation | Collect / process |
+| Staging | `RAW_INVENTORY` | Ingestion dataset |
+| Operational master | `MASTER_INVENTORY` | Product / inventory state |
+| Public projection | WooCommerce | Public commerce layer |
+| Public website | BBKitchen Website | Product / SEO / discovery |
+
+> `RAW_INVENTORY` ≠ `MASTER_INVENTORY` ≠ WooCommerce ≠ Website
 
 ## 52 — DATA FLOW — CURRENT
 
@@ -820,55 +974,84 @@ SEO / Customer Discovery
 WhatsApp
 ```
 
-## 53 — DATA FLOW — SOLD
+## 53 — Data Flow — Sold
 
-UNIT → READY → SOLD → TANGGAL_TERJUAL → DURASI_TERJUAL
+```text
+UNIT
+ ↓
+READY
+ ↓
+SOLD
+ ↓
+TANGGAL_TERJUAL
+ ↓
+DURASI_TERJUAL
+```
 
-Derived: Days to Sell / Inventory Aging / Velocity
+### Derived metrics
 
-## 54 — DATA NOW CONFIRMED ANALYZABLE
+- Days to Sell
+- Inventory Aging
+- Velocity
 
-Inventory: Unit / SKU / Status / Warehouse-location / Source group / Condition / Entry date / Sold date / Days to sell / Availability
+## 54 — Data Now Confirmed Analyzable
 
-Product: Product / Category / SEO title / Description / Images / Publishing state / WooCommerce Product ID
+| Domain | Confirmed data |
+|---|---|
+| **Inventory** | Unit / SKU · Status · Warehouse / location · Source group · Condition · Entry date · Sold date · Days to sell · Availability |
+| **Product** | Product · Category · SEO title · Description · Images · Publishing state · WooCommerce Product ID |
+| **Pipeline** | Pending photos · Ready to publish · Published · Errors · No photos · Ambiguous status · Price processing state |
+| **Source** | Telegram source · Message · Source link · Caption · Photo · Fetch date · Last seen date |
 
-Pipeline: Pending Photos / Ready to Publish / Published / Errors / No Photos / Ambiguous Status / Price Processing State
+## 55 — Data Requiring Additional Sources
 
-Source: Telegram source / Message / Source link / Caption / Photo / Fetch date / Last seen date
+- Customer lifetime value
+- Actual WhatsApp conversation
+- Final deal price
+- Actual margin
+- Full quotation history
+- Full invoice history
+- Complete finance ledger
+- Ad → WhatsApp → Deal attribution
+- Customer acquisition cost
+- Complete investor reporting
 
-## 55 — DATA REQUIRING ADDITIONAL SOURCES
+> These are **not automatically available** from the current product / inventory pipeline.
 
-Customer lifetime value
-Actual WhatsApp conversation
-Final deal price
-Actual margin
-Full quotation history
-Full invoice history
-Complete finance ledger
-Ad → WhatsApp → Deal attribution
-Customer acquisition cost
-Complete investor reporting
+## 56 — Data Not to Invent
 
-## 56 — DATA NOT TO INVENT
+- ❌ Complete CRM
+- ❌ Complete WhatsApp database
+- ❌ Complete finance database
+- ❌ Complete quotation system
+- ❌ Complete invoice system
+- ❌ Real-time supplier API
+- ❌ Perfect ad attribution
+- ❌ Final database architecture
+- ❌ HOT / WARM / COLD thresholds
+- ❌ Final KPI definitions
 
-❌ Complete CRM
-❌ Complete WhatsApp database
-❌ Complete Finance database
-❌ Complete quotation system
-❌ Complete invoice system
-❌ Real-time supplier API
-❌ Perfect ad attribution
-❌ Final database architecture
-❌ HOT/WARM/COLD thresholds
-❌ Final KPI definitions
+## 57 — Critical Data Boundaries
 
-## 57 — CRITICAL DATA BOUNDARIES
+```text
+PUBLIC
+  ≠
+INTERNAL
+```
 
-PUBLIC ≠ INTERNAL
+### Internal-only
 
-Internal: Supplier Price / Middle Price / WA Price / Floor Price / Deal Price / Margin / Supplier commercial information
+- Supplier Price
+- Middle Price
+- WA Price
+- Floor Price
+- Deal Price
+- Margin
+- Supplier commercial information
 
-## 58 — CURRENT AUTOMATION STACK
+> Internal commercial data remains **admin-controlled** and must not enter public data surfaces.
+
+## 58 — Current Automation Stack
 
 ```text
 GitHub
@@ -887,63 +1070,79 @@ GitHub
     └── extractPriceAndStatus.gs
 ```
 
-External systems: Telegram / Google Sheets / Google Drive / OpenAI API / WooCommerce-WordPress / BBKitchen Website / GA4 / Meta / WhatsApp
+### External systems
 
-Research / intelligence: Google AI Studio / Firecrawl
+Telegram · Google Sheets · Google Drive · OpenAI API · WooCommerce / WordPress · BBKitchen Website · GA4 · Meta · WhatsApp
 
-## 59 — FUTURE DASHBOARD MEASUREMENT MODEL
+### Research / intelligence
+
+Google AI Studio · Firecrawl
+
+## 59 — Future Dashboard Measurement Model
 
 ```text
 MEASURE
-  ↓
+   ↓
 ANALYZE
-  ↓
+   ↓
 ALERT
-  ↓
+   ↓
 DECIDE
 ```
 
-Example:
-37 units entered → 31 normalized → 27 photo-ready → 23 published → 8 sold → median days-to-sell = X
+### Example
 
-Dimensions: Supplier / Warehouse / Category / Condition / Price band / SEO / Traffic / Marketing source
+`37 units entered → 31 normalized → 27 photo-ready → 23 published → 8 sold → median days-to-sell = X`
 
-Decision layer:
-Fix missing photos
-Review failed publish
-Prioritize hot supplier
-Increase content on weak category
-Investigate slow-moving units
-Review advertising
+### Dimensions
 
-## 60 — FINAL GROUND-TRUTH POSITION
+Supplier · Warehouse · Category · Condition · Price band · SEO · Traffic · Marketing source
+
+### Decision actions
+
+- Fix missing photos
+- Review failed publish
+- Prioritize hot supplier
+- Increase content on weak category
+- Investigate slow-moving units
+- Review advertising
+
+## 60 — Final Ground-Truth Position
 
 ```text
 SOURCE
-↓
+  ↓
 Supplier / Telegram
-↓
+  ↓
 BBK-AUTOMATION
-↓
+  ↓
 Python ingestion
-↓
+  ↓
 RAW_INVENTORY
-↓
+  ↓
 Apps Script
-↓
+  ↓
 MASTER_INVENTORY
-├── WooCommerce → BBK WEBSITE → SEO
-└── Internal Ops → WhatsApp → Lead / Deal
-↓
+  ├── WooCommerce → BBK WEBSITE → SEO
+  └── Internal Ops → WhatsApp → Lead / Deal
+  ↓
 BUSINESS DATA
-↓
+  ↓
 CONTROL TOWER
-├── ANALYZE
-├── ALERT
-└── REPORT
-↓
+  ├── ANALYZE
+  ├── ALERT
+  └── REPORT
+  ↓
 DECIDE
 ```
+
+### System boundary
+
+**Operational pipeline:** Supplier → Telegram → Automation → Inventory → WooCommerce → Website
+
+**Analytical layer:** Product / marketing / customer / finance signals → Control Tower
+
+**Decision layer:** Analyze → Alert → Decide → Report
 
 ---
 
