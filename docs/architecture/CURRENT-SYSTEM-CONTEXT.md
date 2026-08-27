@@ -4,7 +4,16 @@
 > **Updated:** 27 August 2026  
 > **Purpose:** Sanitized system reference for BBKitchen engineering, migration, automation, and future Control Tower work.
 
-## 1. REPOSITORY MAP
+### Quick Navigation
+
+[Repositories](#01--repository-map) · [Architecture](#02--overall-architecture) · [Automation](#03--bbk-automation) · [Inventory](#12--raw_inventory) · [Master](#22--master_inventory) · [WooCommerce](#27--master--woocommerce-mapping) · [Website](#35--website) · [Control Tower](#45--control-tower--future) · [Data Boundaries](#54--critical-data-boundaries) · [Final Position](#57--final-ground-truth-position)
+
+## 01 — Repository Map
+
+> **Public portfolio:** this sanitized repository  
+> **Active frontend:** [Front-End-BBKitchen](https://github.com/soolaeman/Front-End-BBKitchen)  
+> **AI + Apps Script:** [BBK-AI-Growth-Automation](https://github.com/soolaeman/BBK-AI-Growth-Automation)  
+> **Production automation:** `BBK-Automation` — **PRIVATE**
 
 | Repository | Visibility | Role |
 |---|:---:|---|
@@ -40,17 +49,9 @@
 - Internal commercial data
 - Production-only configuration
 
-## 2. REPOSITORIES
+## 02 — Overall Architecture
 
-| Repository | Visibility | Role |
-|---|---|---|
-| soolaeman/BBKitchen-Next.js-Migration-Sanitize | PUBLIC | Sanitized portfolio / canonical public engineering reference |
-| soolaeman/Front-End-BBKitchen | PUBLIC | Active BBKitchen website / frontend / Next.js migration |
-| soolaeman/BBK-AI-Growth-Automation | PUBLIC | AI Growth documentation + Apps Script processing/integration layer |
-| soolaeman/BBK-Automation | PRIVATE | Production-oriented Python automation runtime |
-
-## 5. OVERALL CURRENT ARCHITECTURE
-
+```text
 SUPPLIER SOURCE
 ↓
 TELEGRAM
@@ -78,22 +79,33 @@ CUSTOMER
 WHATSAPP
 ↓
 LEAD / QUOTATION / DEAL
+```
 
 Separate analytical sources:
+```text
 GA4 / META / SEARCH & SEO DATA / FINANCE / CUSTOMER & SALES DATA
 ↓
 FUTURE CONTROL TOWER
+```
 
-## 6. BBK-AUTOMATION
+## 03 — BBK-AUTOMATION
 
 Repository: `soolaeman/BBK-Automation` — PRIVATE
 
 Primary runtime:
-GitHub Actions → run_cloud.py → telethon_fetch.py → telegram_parser_to_gsheet.py
+```text
+GitHub Actions
+  ↓
+run_cloud.py
+  ↓
+telethon_fetch.py
+  ↓
+telegram_parser_to_gsheet.py
+```
 
 Photo upload: upload_to_drive.py
 
-## 7. GITHUB ACTIONS
+## 04 — GITHUB ACTIONS
 
 Workflow: .github/workflows/run-bbk.yml
 
@@ -105,7 +117,7 @@ Runner: ubuntu-latest
 Python: 3.11
 Dependencies: requirements.txt
 
-## 8. GITHUB SECRETS / CREDENTIALS
+## 05 — GITHUB SECRETS / CREDENTIALS
 
 Google Sheets: GSHEETS_CRED_JSON
 Telegram: TELETHON_SESSION_BASE64
@@ -115,19 +127,21 @@ OpenAI: OPENAI_API_KEY
 
 Credentials are stored through environment variables, Script Properties, and GitHub Secrets rather than hard-coded business credentials.
 
-## 9. PYTHON — run_cloud.py
+## 06 — PYTHON — run_cloud.py
 
 Role: ORCHESTRATOR
 
 Flow:
+```text
 run_cloud.py
 ├── telethon_fetch.py
 └── telegram_parser_to_gsheet.py
+```
 
 Timezone: Asia/Jakarta
 Manual execution can override the date range.
 
-## 10. PYTHON — telethon_fetch.py
+## 07 — PYTHON — telethon_fetch.py
 
 Role: TELEGRAM INGESTION
 Source: Telegram supplier groups
@@ -141,7 +155,7 @@ Python source: 10 Telegram source codes
 
 Do not automatically assume 10 = 10 suppliers or 8 = 8 Telegram groups. Relationship requires verification.
 
-## 11. TELEGRAM DATA INGESTION
+## 08 — TELEGRAM DATA INGESTION
 
 Captured:
 Message ID / Grouped ID / Date / Timestamp / Caption / Photo Source / Group / Message Link
@@ -151,27 +165,35 @@ Output: exports/{SOURCE}/result.json
 Sources:
 GK / BB / SM / BL / ML / PY / PE / WT / ON / RB
 
-## 12. TELEGRAM ALBUM / MESSAGE GROUPING
+## 09 — TELEGRAM ALBUM / MESSAGE GROUPING
 
 Messages within approximately 15 seconds are treated as one product/photo group.
 Caption selection: longest caption → primary caption.
 Caption under 30 characters → skip.
 
-## 13. DEDUPLICATION
+## 10 — DEDUPLICATION
 
 Reference: RAW_INVENTORY
 Primary reference: LINK_MESSAGE
 
 Telegram message → LINK_MESSAGE → already exists? → YES: skip / NO: process
 
-## 14. UNIT / SKU GENERATION
+## 11 — UNIT / SKU GENERATION
 
 Pattern: BBK0001, BBK0002, BBK0003, ...
 Generation: highest existing BBK number + 1.
 
-## 15. PHOTO PROCESSING
+## 12 — PHOTO PROCESSING
 
-JPG → resize → BBKitchen branding/logo processing → WebP
+```text
+JPG
+ ↓
+resize
+ ↓
+BBKitchen branding / logo processing
+ ↓
+WebP
+```
 Maximum dimension: approximately 1600px
 
 Naming:
@@ -181,7 +203,7 @@ BBK####_3.webp
 
 Output folder: BBK_WEBP_MASTER
 
-## 16. RAW_INVENTORY
+## 13 — RAW_INVENTORY
 
 Role: STAGING / INGESTION DATASET
 
@@ -199,7 +221,7 @@ J  STATUS SCRIPT #1
 K  HARGA
 L  PRICE_ANALYSIS_STATUS
 
-## 17. WAREHOUSE / LOCATION MAPPING
+## 14 — WAREHOUSE / LOCATION MAPPING
 
 GK → PAMULANG 2, TANGSEL
 BB → PAMULANG 2, TANGSEL
@@ -214,20 +236,20 @@ ON → KEDAUNG, TANGSEL
 
 Source-code-derived mapping. Not yet the final supplier master structure.
 
-## 18. GOOGLE SHEETS WRITE PROCESS
+## 15 — GOOGLE SHEETS WRITE PROCESS
 
 Batch: 10 rows
 Retry: maximum 3 retries
 Purpose: Google API quota protection and network failure protection.
 
-## 19. GOOGLE DRIVE
+## 16 — GOOGLE DRIVE
 
 Script: upload_to_drive.py
 Source: BBK_WEBP_MASTER
 Destination: Google Drive
 Deduplication: filename already exists → skip upload.
 
-## 20. APPS SCRIPT LAYER
+## 17 — APPS SCRIPT LAYER
 
 src/apps-script/
 1. normalizeAndBuildMaster.gs
@@ -236,7 +258,7 @@ src/apps-script/
 4. syncDrivePhotosToMaster.gs
 5. extractPriceAndStatus.gs
 
-## 21. APPS SCRIPT #5 — PRICE + STATUS EXTRACTION
+## 18 — APPS SCRIPT #5 — PRICE + STATUS EXTRACTION
 
 File: extractPriceAndStatus.gs
 Source: RAW_INVENTORY
@@ -248,14 +270,14 @@ Allowed status: AVAILABLE / SOLD / AMBIGUOUS
 Output: I = STATUS, K = HARGA, L = processing/result state
 Processing limit: 25 AI records / execution
 
-## 22. PRICE EXTRACTION RULE
+## 19 — PRICE EXTRACTION RULE
 
 Do not automatically treat dimensions, capacity, wattage, quantity, model number, serial number, telephone number, address, date, year, or other unrelated numbers as price.
 
 Supported formats include:
 250.000 / 1.200.000 / 2,5 juta / 750rb / 1,5 jt
 
-## 23. PRICING BOUNDARY
+## 20 — PRICING BOUNDARY
 
 Confirmed ingestion field: HARGA
 
@@ -264,7 +286,7 @@ SUPPLIER PRICE → MIDDLE PRICE → WA PRICE → FLOOR PRICE → DEAL PRICE
 
 EXTRACTED SOURCE PRICE ≠ ALL INTERNAL COMMERCIAL PRICES
 
-## 24. INTERNAL PRICING
+## 21 — INTERNAL PRICING
 
 Internal/admin-only:
 Supplier Price / Middle Price / WA Price / Floor Price / Deal Price
@@ -277,12 +299,18 @@ Supplier Price / Middle Price / WA Price / Floor Price / Deal Price / Margin / I
 
 This is a data/access boundary, not merely frontend hiding.
 
-## 25. APPS SCRIPT #1 — NORMALIZATION / MASTER BUILD
+## 22 — APPS SCRIPT #1 — NORMALIZATION / MASTER BUILD
 
 File: normalizeAndBuildMaster.gs
-RAW_INVENTORY → normalization / transformation → MASTER_INVENTORY
+```text
+RAW_INVENTORY
+  ↓
+Normalization / transformation
+  ↓
+MASTER_INVENTORY
+```
 
-## 26. MASTER_INVENTORY
+## 23 — MASTER_INVENTORY
 
 Confirmed worksheet: MASTER_INVENTORY
 
@@ -314,25 +342,33 @@ X  IMAGE DESCRIPTION
 
 T remains undefined until a source confirms its meaning.
 
-## 27. MASTER_INVENTORY ROLE
+## 24 — MASTER_INVENTORY ROLE
 
 RAW_INVENTORY → MASTER_INVENTORY → operational product/inventory state
 
 Contains unit identity, product data, SEO data, inventory status, location, condition, photos, Telegram source, WooCommerce Product ID, entry date, sold date, and sold duration.
 
-## 28. APPS SCRIPT #4 — PHOTO SYNC
+## 25 — APPS SCRIPT #4 — PHOTO SYNC
 
 File: syncDrivePhotosToMaster.gs
 Source: RAW_INVENTORY + Google Drive
 Target: MASTER_INVENTORY
 
-PENDING_PHOTOS → find photo → MAIN IMAGE + GALLERY → READY_TO_PUBLISH
+```text
+PENDING_PHOTOS
+  ↓
+Find photo
+  ↓
+MAIN IMAGE + GALLERY
+  ↓
+READY_TO_PUBLISH
+```
 
 Confirmed: M = MAIN IMAGE, N = GALLERY / PHOTO URLS
 Processing limit: 15 products / execution
 No photo: NO_PHOTOS_FOUND
 
-## 29. APPS SCRIPT #3 — PUBLISH TO WOOCOMMERCE
+## 26 — APPS SCRIPT #3 — PUBLISH TO WOOCOMMERCE
 
 File: publishMasterToWooCommerce.gs
 Source: MASTER_INVENTORY
@@ -341,7 +377,7 @@ Publish condition: F = READY_TO_PUBLISH
 Image requirement: MAIN_IMAGE required
 No image: SKIP: NO IMAGE
 
-## 30. MASTER → WOOCOMMERCE MAPPING
+## 27 — MASTER → WOOCOMMERCE MAPPING
 
 A → sku
 B → title
@@ -364,7 +400,7 @@ X → image_description
 
 Endpoint: /wp-json/bbk/v1/tambah-produk
 
-## 31. WOOCOMMERCE STOCK STATE
+## 28 — WOOCOMMERCE STOCK STATE
 
 MASTER STATUS = SOLD → Woo stock_status = outofstock
 MASTER STATUS != SOLD → Woo stock_status = instock
@@ -372,7 +408,7 @@ MASTER STATUS != SOLD → Woo stock_status = instock
 Successful publish: HTTP 200 → F = PUBLISHED → S = WooCommerce Product ID
 Error: F = ERROR: ...
 
-## 32. APPS SCRIPT #2 — STOCK STATUS
+## 29 — APPS SCRIPT #2 — STOCK STATUS
 
 File: handleStockStatusChange.gs
 Target: MASTER_INVENTORY
@@ -385,7 +421,7 @@ P = TANGGAL_TERJUAL
 Q = DURASI_TERJUAL
 S = PRODUCT ID
 
-## 33. SOLD LIFECYCLE
+## 30 — SOLD LIFECYCLE
 
 STATUS = SOLD:
 E = SOLD
@@ -395,7 +431,7 @@ Q = DURASI_TERJUAL
 If duration is not provided: TANGGAL_TERJUAL - TANGGAL_MASUK
 Result: DAYS TO SELL
 
-## 34. READY LIFECYCLE
+## 31 — READY LIFECYCLE
 
 STATUS = READY:
 E = READY
@@ -403,8 +439,9 @@ P = empty
 Q = empty
 R = LINK_TELEGRAM retained
 
-## 35. CURRENT PRODUCT STATE MACHINE
+## 32 — CURRENT PRODUCT STATE MACHINE
 
+```text
 TELEGRAM SOURCE
 ↓
 RAW_INVENTORY
@@ -420,10 +457,11 @@ READY_TO_PUBLISH
 PUBLISHED
 ↓
 READY / SOLD
+```
 
 Error/exception states: AMBIGUOUS / ERROR / NO_PHOTOS_FOUND / SKIP: NO IMAGE
 
-## 36. INVENTORY INTELLIGENCE
+## 33 — INVENTORY INTELLIGENCE
 
 Analyzable:
 Unit count / Unit status / Warehouse-location / Source group / Condition / Product-category / Entry date / Sold date / Days to sell / Published state / Photo readiness / Pipeline errors
@@ -431,24 +469,38 @@ Unit count / Unit status / Warehouse-location / Source group / Condition / Produ
 Potential derived metrics:
 Inventory aging / Average days to sell / Median days to sell / Fast-moving units / Slow-moving units / Category velocity / Warehouse velocity / Supplier-source velocity
 
-## 37. SUPPLIER / WAREHOUSE INTELLIGENCE
+## 34 — SUPPLIER / WAREHOUSE INTELLIGENCE
 
-SUPPLIER / SOURCE → INVENTORY → MOVEMENT → DAYS TO SELL
+```text
+SUPPLIER / SOURCE
+  ↓
+INVENTORY
+  ↓
+MOVEMENT
+  ↓
+DAYS TO SELL
+```
 
 Potential classifications: HOT / WARM / COLD
 Thresholds are not yet defined.
 
-## 38. WEBSITE
+## 35 — WEBSITE
 
 Repository: [soolaeman/Front-End-BBKitchen](https://github.com/soolaeman/Front-End-BBKitchen) — PUBLIC
 Role: PUBLIC PRODUCT / SEO / DISCOVERY LAYER
 
-MASTER → WooCommerce → BBKitchen Website
+```text
+MASTER_INVENTORY
+  ↓
+WooCommerce
+  ↓
+BBKitchen Website
+```
 
 Objective:
 Unique Units → Unique Product Pages → Search Surface → Organic Discovery → Customer Interest → WhatsApp
 
-## 39. PUBLIC VS INTERNAL DATA
+## 36 — PUBLIC VS INTERNAL DATA
 
 PUBLIC:
 Product Image / Description / Specification / Condition / Safe availability information / SEO / CTA
@@ -458,67 +510,101 @@ Supplier Source / Supplier Price / Middle Price / WA Price / Floor Price / Deal 
 
 Internal data must not leak through frontend JSON API, HTML, metadata, SEO schema, search index, or public endpoint.
 
-## 40. TELEGRAM → CUSTOMER WORKFLOW
+## 37 — TELEGRAM → CUSTOMER WORKFLOW
 
 Telegram Source → Admin → Cross-check → Save photo → Copy caption → Adjust commercial information → WhatsApp → Customer
 
 Telegram provides photo, caption, source message, availability, and original source.
 MASTER_INVENTORY R = LINK_TELEGRAM is retained.
 
-## 41. CUSTOMER / SALES
+## 38 — CUSTOMER / SALES
 
-Website / Social / Ads / Referral → Customer → WhatsApp → Lead → Negotiation → Quotation → Deal → Revenue
+```text
+Website / Social / Ads / Referral
+  ↓
+Customer
+  ↓
+WhatsApp
+  ↓
+Lead
+  ↓
+Negotiation
+  ↓
+Quotation
+  ↓
+Deal
+  ↓
+Revenue
+```
 
 Website / GA4 / Meta can observe acquisition/events but does not automatically guarantee WhatsApp conversation → negotiation → final deal → revenue.
 
-## 42. GA4
+## 39 — GA4
 
-Website → GA4
+```text
+Website
+  ↓
+GA4
+```
 
 Relevant: Users / Sessions / Traffic Source / Medium / Campaign / Landing Page / Page Views / Engagement / Events / Conversions
 
 GA4 → WhatsApp Click ≠ Deal / Revenue / Margin
 
-## 43. META / META PIXEL / ADS
+## 40 — META / META PIXEL / ADS
 
-Meta → Ads → Pixel / Events
+```text
+Meta
+  ↓
+Ads
+  ↓
+Pixel / Events
+```
 
 Relevant: Impressions / Reach / Clicks / CTR / Spend / Campaign / Ad Set / Creative / Audience / Events
 
 Meta → Website → WhatsApp → Deal is not automatically guaranteed to be linked.
 
-## 44. SEO
+## 41 — SEO
 
 MORE UNIQUE UNITS → MORE UNIQUE PRODUCT PAGES → MORE SEARCH SURFACE → MORE ORGANIC DISCOVERY
 
 Potential analysis: Impressions / Clicks / CTR / Position / Queries / Indexed Pages / Landing Pages / Product Pages / Category Pages / Metadata / Internal Linking / Crawlability / Content Quality
 
-## 45. FINANCE
+## 42 — FINANCE
 
 Desired intelligence: Revenue / COGS / Cost / Margin / Ads Cost / Operational Cost / Cash In / Cash Out / Receivable / Payable / Profitability
 
 Integration depth: NOT YET FULLY VERIFIED
 
-## 46. CUSTOMER DATA
+## 43 — CUSTOMER DATA
 
 Desired structure:
 Customer → ID / Name / Phone / Source / Campaign / Product Interest / Lead / Quotation / Deal / Revenue
 
 Current status: NOT YET CONFIRMED AS A COMPLETE CONNECTED DATABASE
 
-## 47. REPORTING
+## 44 — REPORTING
 
-RAW DATA → ANALYSIS → INSIGHT → DECISION
+```text
+RAW DATA
+  ↓
+ANALYSIS
+  ↓
+INSIGHT
+  ↓
+DECISION
+```
 
 Audience: FOUNDER / ADMIN / OPERATIONS / MARKETING / SALES / INVESTOR
 
-## 48. CONTROL TOWER — FUTURE
+## 45 — CONTROL TOWER — FUTURE
 
 Purpose: READ / ANALYZE / ALERT / DECIDE / REPORT
 
 EXISTING OPERATIONAL SYSTEM → MASTER DATA → BBK CONTROL TOWER → READ / ANALYZE / ALERT → DECIDE → REPORT
 
-## 49. FUTURE CONTROL TOWER MODULES
+## 46 — FUTURE CONTROL TOWER MODULES
 
 1. Overview
 2. Website / GA4
@@ -530,7 +616,7 @@ EXISTING OPERATIONAL SYSTEM → MASTER DATA → BBK CONTROL TOWER → READ / ANA
 8. Reporting
 9. Access Control
 
-## 50. WAREHOUSE INTELLIGENCE
+## 47 — WAREHOUSE INTELLIGENCE
 
 8 supplier/warehouse network → inventory movement → fast-moving units → hot categories → hot suppliers/locations → future warehouse planning
 
@@ -541,7 +627,7 @@ Kategori apa yang hot?
 Warehouse mana yang menghasilkan movement terbaik?
 Barang apa yang terlalu lama?
 
-## 51. PRODUCT AUTOMATION GUARDRAILS
+## 48 — PRODUCT AUTOMATION GUARDRAILS
 
 Current states:
 PENDING_PHOTOS / READY_TO_PUBLISH / PUBLISHED / ERROR / NO_PHOTOS_FOUND / SKIP: NO IMAGE
@@ -549,7 +635,7 @@ PENDING_PHOTOS / READY_TO_PUBLISH / PUBLISHED / ERROR / NO_PHOTOS_FOUND / SKIP: 
 Monitor:
 Automation Health / Data Quality / Publishing Errors / Missing Photos / Ambiguous Prices-Status / Failed Integrations
 
-## 52. AI
+## 49 — AI
 
 Current verified AI usage:
 Apps Script #5 → OpenAI gpt-4o-mini → Price + Status extraction
@@ -557,14 +643,14 @@ Apps Script #5 → OpenAI gpt-4o-mini → Price + Status extraction
 Google AI Studio: future / additional AI analysis environment.
 It is not the existing production runtime.
 
-## 53. FIRECRAWL
+## 50 — FIRECRAWL
 
 Role: External Web Research
 Potential: Competitor research / SEO research / Market intelligence / Website analysis / External data extraction
 
 Not established as the primary BBK transactional data layer.
 
-## 54. SINGLE SOURCE / DATA LAYER MODEL
+## 51 — SINGLE SOURCE / DATA LAYER MODEL
 
 SOURCE OF ORIGIN: Telegram / Supplier
 ↓
@@ -580,34 +666,52 @@ PUBLIC WEBSITE: BBKitchen
 
 RAW_INVENTORY ≠ MASTER_INVENTORY ≠ WooCommerce ≠ Website
 
-## 55. DATA FLOW — CURRENT
+## 52 — DATA FLOW — CURRENT
 
-SUPPLIER → TELEGRAM → Telethon → exports/result.json → Python Parser
-Python Parser: grouping / deduplication / BBK code generation / warehouse mapping / photo processing / Google Sheets ingestion
-↓
+```text
+SUPPLIER
+  ↓
+TELEGRAM
+  ↓
+Telethon
+  ↓
+exports/result.json
+  ↓
+Python Parser
+  ├── grouping
+  ├── deduplication
+  ├── BBK code generation
+  ├── warehouse mapping
+  ├── photo processing
+  └── Google Sheets ingestion
+  ↓
 RAW_INVENTORY
-↓
-Apps Script: Price / Status extraction / Normalize / Build Master / Drive Photo Sync
-↓
+  ↓
+Apps Script
+  ├── Price / Status extraction
+  ├── Normalize / Build Master
+  └── Drive Photo Sync
+  ↓
 MASTER_INVENTORY
-↓
+  ↓
 Publish
-↓
+  ↓
 WooCommerce
-↓
+  ↓
 BBKitchen Website
-↓
+  ↓
 SEO / Customer Discovery
-↓
+  ↓
 WhatsApp
+```
 
-## 56. DATA FLOW — SOLD
+## 53 — DATA FLOW — SOLD
 
 UNIT → READY → SOLD → TANGGAL_TERJUAL → DURASI_TERJUAL
 
 Derived: Days to Sell / Inventory Aging / Velocity
 
-## 57. DATA NOW CONFIRMED ANALYZABLE
+## 54 — DATA NOW CONFIRMED ANALYZABLE
 
 Inventory: Unit / SKU / Status / Warehouse-location / Source group / Condition / Entry date / Sold date / Days to sell / Availability
 
@@ -617,7 +721,7 @@ Pipeline: Pending Photos / Ready to Publish / Published / Errors / No Photos / A
 
 Source: Telegram source / Message / Source link / Caption / Photo / Fetch date / Last seen date
 
-## 58. DATA REQUIRING ADDITIONAL SOURCES
+## 55 — DATA REQUIRING ADDITIONAL SOURCES
 
 Customer lifetime value
 Actual WhatsApp conversation
@@ -630,7 +734,7 @@ Ad → WhatsApp → Deal attribution
 Customer acquisition cost
 Complete investor reporting
 
-## 59. DATA NOT TO INVENT
+## 56 — DATA NOT TO INVENT
 
 ❌ Complete CRM
 ❌ Complete WhatsApp database
@@ -643,14 +747,15 @@ Complete investor reporting
 ❌ HOT/WARM/COLD thresholds
 ❌ Final KPI definitions
 
-## 60. CRITICAL DATA BOUNDARIES
+## 57 — CRITICAL DATA BOUNDARIES
 
 PUBLIC ≠ INTERNAL
 
 Internal: Supplier Price / Middle Price / WA Price / Floor Price / Deal Price / Margin / Supplier commercial information
 
-## 61. CURRENT AUTOMATION STACK
+## 58 — CURRENT AUTOMATION STACK
 
+```text
 GitHub
 ├── GitHub Actions
 │   └── Python
@@ -665,14 +770,23 @@ GitHub
     ├── publishMasterToWooCommerce.gs
     ├── syncDrivePhotosToMaster.gs
     └── extractPriceAndStatus.gs
+```
 
 External systems: Telegram / Google Sheets / Google Drive / OpenAI API / WooCommerce-WordPress / BBKitchen Website / GA4 / Meta / WhatsApp
 
 Research / intelligence: Google AI Studio / Firecrawl
 
-## 62. FUTURE DASHBOARD MEASUREMENT MODEL
+## 59 — FUTURE DASHBOARD MEASUREMENT MODEL
 
-MEASURE → ANALYZE → ALERT → DECIDE
+```text
+MEASURE
+  ↓
+ANALYZE
+  ↓
+ALERT
+  ↓
+DECIDE
+```
 
 Example:
 37 units entered → 31 normalized → 27 photo-ready → 23 published → 8 sold → median days-to-sell = X
@@ -687,8 +801,9 @@ Increase content on weak category
 Investigate slow-moving units
 Review advertising
 
-## 63. FINAL GROUND-TRUTH POSITION
+## 60 — FINAL GROUND-TRUTH POSITION
 
+```text
 SOURCE
 ↓
 Supplier / Telegram
@@ -713,6 +828,7 @@ CONTROL TOWER
 └── REPORT
 ↓
 DECIDE
+```
 
 ---
 
